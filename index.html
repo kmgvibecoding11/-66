@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Анализ документов — PRD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1238C9; --blue-soft:#e8edfc; --bg:#ffffff; --bg2:#f5f6fa; --text:#0b0d14; --muted:#5b6070;
+  --line:#e2e5ee; --high:#c62828; --high-bg:#fdeaea; --mid:#b26a00; --mid-bg:#fff3de; --low:#2e7d32; --low-bg:#e6f4e7;
+  --radius:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --blue:#6f8cff; --blue-soft:#18213f; --bg:#0c0e14; --bg2:#141824; --text:#eef0f6; --muted:#9aa1b5;
+    --line:#252b3b; --high:#ff8a80; --high-bg:#3a1a1a; --mid:#ffc266; --mid-bg:#3a2c12; --low:#8fd694; --low-bg:#17301a;
+  }
+}
+:root[data-theme="dark"]{
+  --blue:#6f8cff; --blue-soft:#18213f; --bg:#0c0e14; --bg2:#141824; --text:#eef0f6; --muted:#9aa1b5;
+  --line:#252b3b; --high:#ff8a80; --high-bg:#3a1a1a; --mid:#ffc266; --mid-bg:#3a2c12; --low:#8fd694; --low-bg:#17301a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Onest,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;font-size:16px}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
+.logo{font-weight:700;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.logo i{width:26px;height:26px;border-radius:7px;background:var(--blue);display:inline-block;position:relative}
+.logo i::after{content:"";position:absolute;inset:7px 8px;border:2px solid #fff;border-radius:2px}
+nav{display:flex;gap:4px;overflow-x:auto;margin-left:auto;scrollbar-width:none}
+nav a{padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:14px;white-space:nowrap}
+nav a:hover{background:var(--bg2);color:var(--text)}
+.theme{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:16px;flex:none}
+.hero{padding:64px 0 40px}
+.hero h1{font-size:clamp(32px,6vw,56px);line-height:1.08;margin:12px 0 16px;letter-spacing:-.02em}
+.hero h1 span{color:var(--blue)}
+.hero p{max-width:680px;color:var(--muted);font-size:18px;margin:0 0 24px}
+.chip{display:inline-block;padding:4px 12px;border-radius:99px;background:var(--blue-soft);color:var(--blue);font-weight:600;font-size:13px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:32px}
+.meta div{background:var(--bg2);border-radius:var(--radius);padding:14px 16px}
+.meta small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.meta b{font-size:16px}
+section{padding:48px 0;border-top:1px solid var(--line)}
+section h2{font-size:clamp(24px,4vw,34px);margin:0 0 6px;letter-spacing:-.01em}
+section .lead{color:var(--muted);margin:0 0 28px;max-width:720px}
+.num{color:var(--blue);font-weight:700;margin-right:8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--bg2);border-radius:var(--radius);padding:20px;border:1px solid transparent}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.big{font-size:34px;font-weight:700;color:var(--blue);line-height:1.1;margin-bottom:6px}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;counter-reset:s;position:relative}
+.flow .step{counter-increment:s;background:var(--bg2);border-radius:var(--radius);padding:16px;position:relative}
+.flow .step::before{content:counter(s);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:14px;margin-bottom:10px}
+.flow .step p{margin:0;font-size:14px}
+/* demo */
+.demo{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;align-items:start}
+@media(max-width:860px){.demo{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--bg)}
+.drop{border:2px dashed var(--line);border-radius:var(--radius);padding:28px 16px;text-align:center;cursor:pointer;transition:.2s;color:var(--muted)}
+.drop:hover,.drop.on{border-color:var(--blue);background:var(--blue-soft);color:var(--text)}
+.drop b{display:block;color:var(--text);margin-bottom:4px}
+.file{display:none;align-items:center;gap:12px;padding:12px;border-radius:10px;background:var(--bg2);margin-top:12px}
+.file.show{display:flex}
+.file .ext{background:var(--blue);color:#fff;font-weight:700;font-size:11px;border-radius:6px;padding:6px 7px}
+.file div{flex:1;min-width:0;font-size:14px}
+.file div span{display:block;color:var(--muted);font-size:12px}
+.file button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px}
+.btn{border:0;border-radius:10px;background:var(--blue);color:#fff;font:inherit;font-weight:600;padding:11px 18px;cursor:pointer;width:100%;margin-top:14px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--bg2);color:var(--text);width:auto;margin:0}
+.steps{list-style:none;padding:0;margin:16px 0 0;font-size:14px;color:var(--muted)}
+.steps li{padding:5px 0 5px 26px;position:relative}
+.steps li::before{content:"";position:absolute;left:4px;top:11px;width:10px;height:10px;border-radius:50%;border:2px solid var(--line)}
+.steps li.act{color:var(--text);font-weight:600}
+.steps li.act::before{border-color:var(--blue);background:var(--blue-soft)}
+.steps li.done{color:var(--text)}
+.steps li.done::before{background:var(--blue);border-color:var(--blue)}
+.err{color:var(--high);font-size:14px;margin-top:10px;min-height:20px}
+.empty{color:var(--muted);text-align:center;padding:60px 10px}
+.report{display:none}
+.report.show{display:block}
+.score{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ring{--v:72;width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--blue) calc(var(--v)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring span{width:76px;height:76px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:700;font-size:24px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:14px 0}
+.kv div{background:var(--bg2);border-radius:10px;padding:10px 12px;font-size:14px}
+.kv small{display:block;color:var(--muted);font-size:12px}
+.rh{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:26px 0 10px;font-weight:600}
+.bar{display:grid;grid-template-columns:minmax(120px,1.3fr) 2fr 70px;gap:10px;align-items:center;width:100%;padding:7px 8px;border:0;background:none;color:var(--text);font:inherit;font-size:14px;text-align:left;cursor:pointer;border-radius:8px}
+.bar:hover,.bar.on{background:var(--blue-soft)}
+.bar .t{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--blue);border-radius:5px;transition:width .6s}
+.bar em{font-style:normal;color:var(--muted);font-size:12px;text-align:right}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px}
+.tag.high{background:var(--high-bg);color:var(--high)}.tag.mid{background:var(--mid-bg);color:var(--mid)}.tag.low{background:var(--low-bg);color:var(--low)}
+.item{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:14px}
+.item.hi{border-left:4px solid var(--blue)}
+.item q{display:block;color:var(--muted);font-style:italic;margin-top:4px}
+.item .m{color:var(--muted);font-size:12px;margin-top:4px}
+/* tables */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);padding:8px 14px;border-radius:99px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--bg2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td:first-child{white-space:nowrap;font-weight:600;color:var(--blue)}
+/* arch */
+.arch{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:stretch}
+.node{background:var(--bg2);border-radius:var(--radius);padding:16px;position:relative;border:1px solid var(--line)}
+.node.main{background:var(--blue);color:#fff}
+.node.main p{color:#dfe5ff}
+.node h3{margin:0 0 4px;font-size:15px}.node p{margin:0;font-size:13px;color:var(--muted)}
+.cats{display:flex;flex-wrap:wrap;gap:8px}
+.cats span{background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:14px}
+.cats span b{color:var(--blue);margin-right:6px}
+.road{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.road div{border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:15px;display:flex;gap:12px}
+.road b{color:var(--blue)}
+footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media(max-width:600px){.bar{grid-template-columns:1fr 60px}.bar .t{grid-column:1/-1;order:3}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="logo"><i></i>Анализ документов</div>
+    <nav aria-label="Разделы">
+      <a href="#flow">Сценарий</a><a href="#demo">Демо</a>
+    </nav>
+    <button class="theme" id="theme" aria-label="Сменить тему">◐</button>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+<div class="hero">
+  <span class="chip">PRD v1.0 · MVP реализован</span>
+  <h1>Сервис <span>анализа документов</span></h1>
+  <p>Загрузите договор, регламент или ТЗ — и за 1–2 минуты получите структурированный отчёт: краткий анализ, системные замечания со статистикой, риски и рекомендации.</p>
+  <a class="chip" href="https://claude.ai/artifact/WTFkgtBSo4N5dy2BeybAAA" target="_blank" rel="noopener">Открыть прототип ↗</a>
+  <div class="meta">
+    <div><small>Продукт</small><b>Веб-сервис «Анализ документов»</b></div>
+    <div><small>Дата</small><b>01.10.2026</b></div>
+    <div><small>Статус</small><b>Прототип (MVP)</b></div>
+    <div><small>Форматы</small><b>DOCX · PDF · до 20 МБ</b></div>
+  </div>
+</div>
+
+<section id="flow">
+  <h2><span class="num">01</span>Пользовательский сценарий</h2>
+  <p class="lead">От загрузки файла до готового отчёта — шесть шагов.</p>
+  <div class="flow">
+    <div class="step"><h3>Открыть</h3><p>Пользователь открывает сервис</p></div>
+    <div class="step"><h3>Загрузить</h3><p>Перетаскиванием или через выбор файла</p></div>
+    <div class="step"><h3>Карточка файла</h3><p>Формат, имя, размер; активна кнопка «Проанализировать»</p></div>
+    <div class="step"><h3>Анализ</h3><p>Чтение → извлечение текста → анализ (таймер) → отчёт. Можно остановить</p></div>
+    <div class="step"><h3>Отчёт</h3><p>Последовательно заполняются 4 блока результатов</p></div>
+    <div class="step"><h3>Действия</h3><p>Фильтр замечаний, скачать отчёт, проверить другой документ</p></div>
+  </div>
+</section>
+
+<section id="demo">
+  <h2><span class="num">02</span>Интерактивная демонстрация</h2>
+  <p class="lead">Визуальная модель интерфейса: две колонки — загрузка слева, результаты справа. Файл никуда не отправляется, показывается пример отчёта. Нажмите на строку статистики, чтобы отфильтровать замечания.</p>
+  <div class="demo">
+    <div class="panel">
+      <h3 style="margin:0 0 12px">Загрузка документа</h3>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Загрузить документ"><b>Перетащите файл сюда</b>или нажмите для выбора · .docx, .pdf · до 20 МБ</div>
+      <input type="file" id="fi" hidden accept=".docx,.pdf,.doc">
+      <div class="file" id="fcard"><span class="ext" id="fext">DOCX</span><div><b id="fname"></b><span id="fsize"></span></div><button id="frm" aria-label="Убрать файл">✕</button></div>
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn" id="go" disabled>Проанализировать</button>
+      <button class="btn ghost" id="sample" style="margin-top:8px;width:100%">Посмотреть пример отчёта</button>
+      <ul class="steps" id="steps">
+        <li>Чтение файла</li><li>Извлечение текста</li><li>Анализ содержания <span id="timer"></span></li><li>Отчёт готов</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="empty" id="empty">Здесь появится отчёт после анализа</div>
+      <div class="report" id="report">
+        <div class="rh" style="margin-top:0">1 · Краткий анализ и описание</div>
+        <div class="score">
+          <div class="ring" id="ring"><span>62</span></div>
+          <div><b style="font-size:18px">Договор оказания услуг № 14/2026</b><br><span class="tag mid">Требует доработки</span></div>
+        </div>
+        <p style="font-size:14px"><b>Анализ.</b> Договор определяет порядок оказания консультационных услуг. Структура логична, но отсутствуют ключевые условия о порядке приёмки и ответственности. Формулировки местами неоднозначны.</p>
+        <p style="font-size:14px"><b>Описание.</b> Стороны — ООО «Альфа» (заказчик) и ИП Иванов (исполнитель). Предмет — консультационные услуги, срок — 12 месяцев, стоимость — 1 200 000 ₸.</p>
+        <div class="kv"><div><small>Стороны</small>ООО «Альфа», ИП Иванов</div><div><small>Сумма</small>1 200 000 ₸</div><div><small>Срок</small>12 месяцев</div><div><small>Объём</small>4 210 слов · 11 стр.</div></div>
+
+        <div class="rh">2 · Системные замечания</div>
+        <div id="stats"></div>
+        <p style="font-size:13px;color:var(--muted)" id="sum"></p>
+        <div id="issues"></div>
+
+        <div class="rh">3 · Предлагаемые риски</div>
+        <div id="risks"></div>
+        <div class="rh">4 · Предлагаемые рекомендации</div>
+        <div id="recs"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:20px">
+          <button class="btn ghost" id="dl">⬇ Скачать отчёт (.txt)</button>
+          <button class="btn ghost" id="again">Проверить другой документ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+<footer><div class="wrap">PRD «Сервис анализа документов» · версия 1.0 · 01.10.2026</div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* theme */
+$('#theme').onclick=()=>{
+  const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.dataset.theme=cur==='dark'?'light':'dark';
+};
+/* sample report data */
+const H='high',M='mid',L='low',LBL={high:'Высокая',mid:'Средняя',low:'Низкая'};
+const ISS=[
+ {c:'Неполнота сведений',i:H,t:'Не определён порядок приёмки оказанных услуг',p:'п. 4',q:'Услуги считаются оказанными по факту…'},
+ {c:'Ответственность сторон',i:H,t:'Отсутствуют санкции за нарушение сроков исполнителем',p:'разд. 6'},
+ {c:'Финансовые условия',i:H,t:'Не указан порядок и срок оплаты, нет условия об НДС',p:'п. 3.2',q:'Стоимость услуг составляет 1 200 000 ₸'},
+ {c:'Юридические формулировки',i:M,t:'Неоднозначная формулировка «разумный срок»',p:'п. 2.4',q:'в разумный срок'},
+ {c:'Юридические формулировки',i:M,t:'Одностороннее изменение условий без согласования',p:'п. 8.1'},
+ {c:'Сроки и даты',i:M,t:'Срок действия договора не совпадает с графиком услуг',p:'п. 5.1 / прил. 1'},
+ {c:'Неполнота сведений',i:M,t:'Не указаны реквизиты и контактные лица сторон',p:'разд. 10'},
+ {c:'Терминология и определения',i:L,t:'Термины «Услуги» и «Работы» используются как синонимы',p:'по тексту'},
+ {c:'Структура и оформление',i:L,t:'Нарушена нумерация пунктов в разделе 7',p:'разд. 7'},
+ {c:'Ссылки на нормативные акты',i:L,t:'Ссылка на утративший силу акт',p:'п. 1.3'},
+];
+const HIST={'Неполнота сведений':[9,12],'Ответственность сторон':[8,12],'Финансовые условия':[6,12],'Юридические формулировки':[10,12],'Сроки и даты':[5,12],'Терминология и определения':[4,12],'Структура и оформление':[7,12],'Ссылки на нормативные акты':[3,12]};
+const RISKS=[
+ {n:'Спор об объёме и качестве услуг',d:'Без порядка приёмки сторона может отказаться подписывать акты.',p:'Высокая',v:'Высокое',l:H},
+ {n:'Финансовые потери при просрочке',d:'Нет санкций — исполнитель не мотивирован соблюдать сроки.',p:'Средняя',v:'Высокое',l:H},
+ {n:'Неверное толкование условий',d:'Оценочные формулировки допускают разные трактовки.',p:'Средняя',v:'Среднее',l:M},
+ {n:'Применение утратившего силу акта',d:'Условие может быть признано недействительным.',p:'Низкая',v:'Среднее',l:L},
+];
+const RECS=[
+ {a:'Добавить порядок приёмки услуг',d:'Ввести раздел с актами, сроками подписания и порядком возражений.',p:H,r:'Спор об объёме и качестве услуг'},
+ {a:'Установить неустойку за просрочку',d:'Указать размер неустойки и порядок её начисления.',p:H,r:'Финансовые потери при просрочке'},
+ {a:'Уточнить порядок оплаты',d:'Определить сроки, этапы оплаты и условие об НДС.',p:M,r:'Финансовые потери при просрочке'},
+ {a:'Заменить «разумный срок» конкретным',d:'Указать срок в календарных днях.',p:M,r:'Неверное толкование условий'},
+ {a:'Актуализировать нормативные ссылки',d:'Заменить ссылку на действующую редакцию.',p:L,r:'Применение утратившего силу акта'},
+];
+const ORD={high:0,mid:1,low:2};
+let filter=null,count=+localStorage.getItem('docs_checked')||0;
+
+function stats(){
+  const by={};ISS.forEach(x=>by[x.c]=(by[x.c]||0)+1);
+  const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]);
+  const max=rows[0][1];
+  $('#stats').innerHTML=rows.map(([c,n])=>{const h=HIST[c]||[0,12];return `<button class="bar ${filter===c?'on':''}" data-c="${esc(c)}"><span>${esc(c)}</span><span class="t"><i style="width:${n/max*100}%"></i></span><em>${n} · ${Math.round(n/ISS.length*100)}%<br>${h[0]} из ${h[1]}</em></button>`}).join('');
+  $('#stats').querySelectorAll('.bar').forEach(b=>b.onclick=()=>{filter=filter===b.dataset.c?null:b.dataset.c;stats();issues()});
+  const rep=rows.filter(r=>(HIST[r[0]]||[0])[0]>=5);
+  const rc=rep.reduce((s,r)=>s+r[1],0);
+  const imp={high:0,mid:0,low:0};ISS.forEach(x=>imp[x.i]++);
+  $('#sum').textContent=`Категорий: ${rows.length} · повторяющихся: ${rep.length} (${Math.round(rc/ISS.length*100)}% замечаний) · важность: высокая ${imp.high}, средняя ${imp.mid}, низкая ${imp.low} · в базе сравнения: 12 документов`;
+}
+function issues(){
+  const list=ISS.filter(x=>!filter||x.c===filter).sort((a,b)=>ORD[a.i]-ORD[b.i]);
+  $('#issues').innerHTML=(filter?`<button class="btn ghost" id="all" style="margin-bottom:10px">Показать все</button>`:'')+list.map(x=>`<div class="item"><span class="tag ${x.i}">${LBL[x.i]}</span> <b>${esc(x.t)}</b>${x.q?`<q>«${esc(x.q)}»</q>`:''}<div class="m">${esc(x.c)} · ${esc(x.p)}</div></div>`).join('');
+  const a=$('#all');if(a)a.onclick=()=>{filter=null;stats();issues()};
+}
+function fill(){
+  filter=null;stats();issues();
+  $('#risks').innerHTML=RISKS.map(r=>`<div class="item"><span class="tag ${r.l}">${LBL[r.l].replace('Высокая','Высокий').replace('Средняя','Средний').replace('Низкая','Низкий')}</span> <b>${esc(r.n)}</b><div style="color:var(--muted);margin-top:3px">${esc(r.d)}</div><div class="m">Вероятность: ${r.p} · Влияние: ${r.v}</div></div>`).join('');
+  $('#recs').innerHTML=RECS.map(r=>`<div class="item ${r.p===H?'hi':''}"><span class="tag ${r.p}">${LBL[r.p]}</span> <b>${esc(r.a)}</b><div style="color:var(--muted);margin-top:3px">${esc(r.d)}</div><div class="m">Риск: ${esc(r.r)}</div></div>`).join('');
+}
+fill();
+
+/* upload flow */
+let file=null,run=null;
+const steps=[...document.querySelectorAll('#steps li')];
+function setStep(n){steps.forEach((li,i)=>li.className=i<n?'done':i===n?'act':'')}
+function reset(){clearTimeout(run);clearInterval(run);setStep(-1);$('#timer').textContent='';$('#report').classList.remove('show');$('#empty').style.display='';}
+function pick(f){
+  $('#err').textContent='';
+  if(!f)return;
+  const ext=f.name.split('.').pop().toLowerCase();
+  if(ext==='doc'){return $('#err').textContent='Файл .doc не поддерживается — пересохраните документ в .docx.'}
+  if(!['docx','pdf'].includes(ext)){return $('#err').textContent='Неподдерживаемый формат — загрузите .docx или PDF.'}
+  if(f.size>20*1024*1024){return $('#err').textContent='Файл больше 20 МБ — уменьшите или разделите документ.'}
+  if(!f.size){return $('#err').textContent='Файл пуст или повреждён — проверьте его и загрузите снова.'}
+  file=f;$('#fext').textContent=ext.toUpperCase();$('#fname').textContent=f.name;
+  $('#fsize').textContent=f.size>1048576?(f.size/1048576).toFixed(1)+' МБ':Math.ceil(f.size/1024)+' КБ';
+  $('#fcard').classList.add('show');$('#go').disabled=false;reset();
+}
+const drop=$('#drop'),fi=$('#fi');
+drop.onclick=()=>fi.click();
+drop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fi.click()}};
+fi.onchange=()=>pick(fi.files[0]);
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('on')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('on')}));
+drop.addEventListener('drop',e=>pick(e.dataTransfer.files[0]));
+$('#frm').onclick=()=>{file=null;fi.value='';$('#fcard').classList.remove('show');$('#go').disabled=true;reset();};
+function analyze(){
+  reset();$('#empty').textContent='Анализ выполняется…';
+  setStep(0);let t=0;
+  setTimeout(()=>setStep(1),700);
+  setTimeout(()=>{setStep(2);run=setInterval(()=>{t++;$('#timer').textContent=t+' с'},1000)},1500);
+  setTimeout(()=>{clearInterval(run);setStep(4);$('#timer').textContent='';$('#empty').style.display='none';$('#report').classList.add('show');fill();count++;try{localStorage.setItem('docs_checked',count)}catch(e){}},4500);
+}
+$('#go').onclick=analyze;
+$('#sample').onclick=analyze;
+$('#again').onclick=()=>{$('#frm').click();$('#empty').textContent='Здесь появится отчёт после анализа';document.getElementById('demo').scrollIntoView()};
+$('#dl').onclick=()=>{
+  const by={};ISS.forEach(x=>by[x.c]=(by[x.c]||0)+1);
+  const txt=['ОТЧЁТ ПО АНАЛИЗУ ДОКУМЕНТА (пример)','Договор оказания услуг № 14/2026','Оценка качества: 62/100','','СИСТЕМНЫЕ ЗАМЕЧАНИЯ',...ISS.map(x=>`[${LBL[x.i]}] ${x.t} (${x.c}, ${x.p})`),'','СТАТИСТИКА',...Object.entries(by).map(([c,n])=>`${c}: ${n}`),'','РИСКИ',...RISKS.map(r=>`${r.n} — ${r.d}`),'','РЕКОМЕНДАЦИИ',...RECS.map(r=>`${r.a} — ${r.d}`)].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+txt],{type:'text/plain;charset=utf-8'}));a.download='report.txt';a.click();
+};
+</script>
+</body>
+</html>
